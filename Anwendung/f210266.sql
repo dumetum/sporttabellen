@@ -33,17 +33,17 @@ prompt APPLICATION 210266 - TTT
 -- Application Export:
 --   Application:     210266
 --   Name:            TTT
---   Date and Time:   13:07 Sunday July 16, 2023
+--   Date and Time:   14:55 Wednesday July 19, 2023
 --   Exported By:     CHRISTIAN@CH-HECKLER.DE
 --   Flashback:       0
 --   Export Type:     Application Export
---     Pages:                     29
---       Items:                   42
+--     Pages:                     30
+--       Items:                   43
 --       Validations:              2
---       Processes:               23
---       Regions:                 68
+--       Processes:               24
+--       Regions:                 69
 --       Buttons:                 37
---       Dynamic Actions:         16
+--       Dynamic Actions:         17
 --     Shared Components:
 --       Logic:
 --         App Settings:           2
@@ -68,7 +68,7 @@ prompt APPLICATION 210266 - TTT
 --           Breadcrumb:           1
 --           Button:               3
 --           Report:              12
---         LOVs:                   8
+--         LOVs:                  10
 --         Plug-ins:               7
 --       PWA:
 --       Globalization:
@@ -123,7 +123,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'TTT'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20230703180222'
+,p_last_upd_yyyymmddhh24miss=>'20230719144622'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_print_server_type=>'INSTANCE'
@@ -203,6 +203,15 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(16192026779725017395)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'5'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(40364462977048799425)
+,p_list_item_display_sequence=>40
+,p_list_item_link_text=>'MannschaftenProTabelle'
+,p_list_item_link_target=>'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-table-pointer'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'3'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16192204510364018231)
@@ -1278,6 +1287,36 @@ wwv_flow_imp_shared.create_list_of_values(
 ,p_location=>'LOCAL'
 ,p_return_column_name=>'SECONDS'
 ,p_display_column_name=>'DISP'
+);
+end;
+/
+prompt --application/shared_components/user_interface/lovs/ttt_mannschaften_verein
+begin
+wwv_flow_imp_shared.create_list_of_values(
+ p_id=>wwv_flow_imp.id(40364469073264799431)
+,p_lov_name=>'TTT_MANNSCHAFTEN.VEREIN'
+,p_source_type=>'TABLE'
+,p_location=>'LOCAL'
+,p_query_table=>'TTT_MANNSCHAFTEN'
+,p_return_column_name=>'ID'
+,p_display_column_name=>'VEREIN'
+,p_default_sort_column_name=>'VEREIN'
+,p_default_sort_direction=>'ASC'
+);
+end;
+/
+prompt --application/shared_components/user_interface/lovs/ttt_tabellen_bezeichnung
+begin
+wwv_flow_imp_shared.create_list_of_values(
+ p_id=>wwv_flow_imp.id(40364469789349799432)
+,p_lov_name=>'TTT_TABELLEN.BEZEICHNUNG'
+,p_source_type=>'TABLE'
+,p_location=>'LOCAL'
+,p_query_table=>'TTT_TABELLEN'
+,p_return_column_name=>'ID'
+,p_display_column_name=>'BEZEICHNUNG'
+,p_default_sort_column_name=>'BEZEICHNUNG'
+,p_default_sort_direction=>'ASC'
 );
 end;
 /
@@ -18529,6 +18568,254 @@ wwv_flow_imp_page.create_page_process(
 ,p_attribute_08=>'Y'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_internal_uid=>16473246756825392999
+);
+end;
+/
+prompt --application/pages/page_00003
+begin
+wwv_flow_imp_page.create_page(
+ p_id=>3
+,p_name=>'MannschaftenProTabelle'
+,p_alias=>'MANNSCHAFTENPROTABELLE'
+,p_step_title=>'MannschaftenProTabelle'
+,p_warn_on_unsaved_changes=>'N'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'21'
+,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
+,p_last_upd_yyyymmddhh24miss=>'20230719144622'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(40364463333739799426)
+,p_plug_name=>'MannschaftenProTabelle'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(16191821856548017276)
+,p_plug_display_sequence=>20
+,p_query_type=>'TABLE'
+,p_query_table=>'TTT_TAB_MANN'
+,p_query_where=>'tab_id = :P3_TAB_ID'
+,p_include_rowid_column=>false
+,p_plug_source_type=>'NATIVE_IG'
+,p_ajax_items_to_submit=>'P3_TAB_ID'
+,p_prn_page_header=>'MannschaftenProTabelle'
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(40364464691772799427)
+,p_name=>'APEX$ROW_SELECTOR'
+,p_item_type=>'NATIVE_ROW_SELECTOR'
+,p_display_sequence=>10
+,p_attribute_01=>'Y'
+,p_attribute_02=>'Y'
+,p_attribute_03=>'N'
+,p_enable_hide=>true
+,p_is_primary_key=>false
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(40364465122196799427)
+,p_name=>'APEX$ROW_ACTION'
+,p_item_type=>'NATIVE_ROW_ACTION'
+,p_label=>'Actions'
+,p_heading_alignment=>'CENTER'
+,p_display_sequence=>20
+,p_value_alignment=>'CENTER'
+,p_enable_hide=>true
+,p_is_primary_key=>false
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(40364466103019799429)
+,p_name=>'ID'
+,p_source_type=>'DB_COLUMN'
+,p_source_expression=>'ID'
+,p_data_type=>'NUMBER'
+,p_session_state_data_type=>'VARCHAR2'
+,p_is_query_only=>true
+,p_item_type=>'NATIVE_HIDDEN'
+,p_display_sequence=>30
+,p_attribute_01=>'Y'
+,p_enable_filter=>false
+,p_enable_hide=>true
+,p_is_primary_key=>true
+,p_duplicate_value=>true
+,p_include_in_export=>false
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(40364467116229799430)
+,p_name=>'TAB_ID'
+,p_source_type=>'DB_COLUMN'
+,p_source_expression=>'TAB_ID'
+,p_data_type=>'NUMBER'
+,p_session_state_data_type=>'VARCHAR2'
+,p_is_query_only=>false
+,p_item_type=>'NATIVE_HIDDEN'
+,p_display_sequence=>40
+,p_attribute_01=>'Y'
+,p_filter_is_required=>false
+,p_use_as_row_header=>false
+,p_enable_sort_group=>false
+,p_enable_pivot=>false
+,p_is_primary_key=>false
+,p_duplicate_value=>true
+,p_include_in_export=>false
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(40364468177919799430)
+,p_name=>'MANN_ID'
+,p_source_type=>'DB_COLUMN'
+,p_source_expression=>'MANN_ID'
+,p_data_type=>'NUMBER'
+,p_session_state_data_type=>'VARCHAR2'
+,p_is_query_only=>false
+,p_item_type=>'NATIVE_SELECT_LIST'
+,p_heading=>'Mann Id'
+,p_heading_alignment=>'LEFT'
+,p_display_sequence=>50
+,p_value_alignment=>'LEFT'
+,p_attribute_01=>'NONE'
+,p_attribute_02=>'N'
+,p_attribute_03=>'Y'
+,p_is_required=>false
+,p_lov_type=>'SHARED'
+,p_lov_id=>wwv_flow_imp.id(40364469073264799431)
+,p_enable_filter=>true
+,p_filter_operators=>'C:S:CASE_INSENSITIVE:REGEXP'
+,p_filter_is_required=>false
+,p_filter_lov_type=>'NONE'
+,p_use_as_row_header=>false
+,p_enable_sort_group=>true
+,p_enable_control_break=>true
+,p_enable_hide=>true
+,p_enable_pivot=>false
+,p_is_primary_key=>false
+,p_duplicate_value=>true
+,p_include_in_export=>true
+);
+wwv_flow_imp_page.create_interactive_grid(
+ p_id=>wwv_flow_imp.id(40364463875930799426)
+,p_internal_uid=>40364463875930799426
+,p_is_editable=>true
+,p_edit_operations=>'i:u:d'
+,p_lost_update_check_type=>'VALUES'
+,p_add_row_if_empty=>true
+,p_submit_checked_rows=>false
+,p_lazy_loading=>false
+,p_requires_filter=>false
+,p_select_first_row=>true
+,p_fixed_row_height=>true
+,p_pagination_type=>'SCROLL'
+,p_show_total_row_count=>true
+,p_show_toolbar=>true
+,p_enable_save_public_report=>false
+,p_enable_subscriptions=>true
+,p_enable_flashback=>true
+,p_define_chart_view=>true
+,p_enable_download=>true
+,p_enable_mail_download=>true
+,p_fixed_header=>'PAGE'
+,p_show_icon_view=>false
+,p_show_detail_view=>false
+);
+wwv_flow_imp_page.create_ig_report(
+ p_id=>wwv_flow_imp.id(40364464299721799426)
+,p_interactive_grid_id=>wwv_flow_imp.id(40364463875930799426)
+,p_static_id=>'403644643'
+,p_type=>'PRIMARY'
+,p_default_view=>'GRID'
+,p_show_row_number=>false
+,p_settings_area_expanded=>true
+);
+wwv_flow_imp_page.create_ig_report_view(
+ p_id=>wwv_flow_imp.id(40364464437087799427)
+,p_report_id=>wwv_flow_imp.id(40364464299721799426)
+,p_view_type=>'GRID'
+,p_srv_exclude_null_values=>false
+,p_srv_only_display_columns=>true
+,p_edit_mode=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(40364465527041799427)
+,p_view_id=>wwv_flow_imp.id(40364464437087799427)
+,p_display_seq=>0
+,p_column_id=>wwv_flow_imp.id(40364465122196799427)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(40364466536374799430)
+,p_view_id=>wwv_flow_imp.id(40364464437087799427)
+,p_display_seq=>1
+,p_column_id=>wwv_flow_imp.id(40364466103019799429)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(40364467599488799430)
+,p_view_id=>wwv_flow_imp.id(40364464437087799427)
+,p_display_seq=>2
+,p_column_id=>wwv_flow_imp.id(40364467116229799430)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(40364468598587799431)
+,p_view_id=>wwv_flow_imp.id(40364464437087799427)
+,p_display_seq=>3
+,p_column_id=>wwv_flow_imp.id(40364468177919799430)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(34542121636670939902)
+,p_name=>'P3_TAB_ID'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_imp.id(40364463333739799426)
+,p_prompt=>'Tab Id'
+,p_display_as=>'NATIVE_TEXT_FIELD'
+,p_cSize=>30
+,p_field_template=>wwv_flow_imp.id(16191902574249017315)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'N'
+,p_attribute_04=>'TEXT'
+,p_attribute_05=>'BOTH'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(34542121788321939903)
+,p_name=>'TabIdChanged'
+,p_event_sequence=>10
+,p_triggering_element_type=>'ITEM'
+,p_triggering_element=>'P3_TAB_ID'
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'change'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(34542121893379939904)
+,p_event_id=>wwv_flow_imp.id(34542121788321939903)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_name=>'NEU_LADEN'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_imp.id(40364463333739799426)
+);
+wwv_flow_imp_page.create_page_process(
+ p_id=>wwv_flow_imp.id(40364470565157799432)
+,p_process_sequence=>10
+,p_process_point=>'AFTER_SUBMIT'
+,p_region_id=>wwv_flow_imp.id(40364463333739799426)
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'MannschaftenProTabelle - Save Interactive Grid Data'
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'pk_ttt.pr_process_ttt_tab_mann(',
+'    i_id_str => :ID,',
+'    i_tab_id_str => :P3_TAB_ID,',
+'    i_mann_id_str => :MANN_ID',
+');'))
+,p_process_clob_language=>'PLSQL'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_internal_uid=>40364470565157799432
 );
 end;
 /

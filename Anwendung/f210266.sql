@@ -33,7 +33,7 @@ prompt APPLICATION 210266 - TTT
 -- Application Export:
 --   Application:     210266
 --   Name:            TTT
---   Date and Time:   14:55 Wednesday July 19, 2023
+--   Date and Time:   13:21 Thursday July 20, 2023
 --   Exported By:     CHRISTIAN@CH-HECKLER.DE
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -123,7 +123,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'TTT'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20230719144622'
+,p_last_upd_yyyymmddhh24miss=>'20230720074735'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_print_server_type=>'INSTANCE'
@@ -18584,7 +18584,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'21'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20230719144622'
+,p_last_upd_yyyymmddhh24miss=>'20230720074735'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(40364463333739799426)
@@ -18810,8 +18810,9 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'pk_ttt.pr_process_ttt_tab_mann(',
 '    i_id_str => :ID,',
-'    i_tab_id_str => :P3_TAB_ID,',
-'    i_mann_id_str => :MANN_ID',
+'    i_tab_id_str => :TAB_ID,',
+'    i_mann_id_str => :MANN_ID,',
+'    i_p3_tab_id_str => :P3_TAB_ID',
 ');'))
 ,p_process_clob_language=>'PLSQL'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'

@@ -61,12 +61,13 @@ exception
         raise;
 end get_ename;
 
-procedure pr_process_ttt_tab_mann(i_id_str varchar2, i_tab_id_str varchar2, i_mann_id_str varchar2)
+procedure pr_process_ttt_tab_mann(i_id_str IN OUT varchar2, i_tab_id_str IN OUT varchar2, i_mann_id_str IN varchar2, i_p3_tab_id_str IN varchar2)
 is
   l_row ttt_tab_mann%rowtype;
+  l_new_id NUMBER;
 begin
   l_row.id := to_number(i_id_str);
-  l_row.tab_id := to_number(i_tab_id_str);
+  l_row.tab_id := to_number(i_p3_tab_id_str);
   l_row.mann_id := to_number(i_mann_id_str);
 
   if v('APEX$ROW_STATUS') = 'D' then
@@ -76,7 +77,12 @@ begin
   else
     -- die id wird offensichtlich automatisch gesetzt
     insert into ttt_tab_mann (tab_id, mann_id)
-    values(l_row.tab_id, l_row.mann_id);
+    values(l_row.tab_id, l_row.mann_id)
+    returning id into l_new_id;
+
+    -- Rückgabe der entsprechenden Werte für die Oberfläche
+    i_id_str := to_char(l_new_id);
+    i_tab_id_str := i_p3_tab_id_str;
   end if;
 end pr_process_ttt_tab_mann; 
 

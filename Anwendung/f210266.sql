@@ -33,7 +33,7 @@ prompt APPLICATION 210266 - TTT
 -- Application Export:
 --   Application:     210266
 --   Name:            TTT
---   Date and Time:   14:35 Tuesday September 12, 2023
+--   Date and Time:   15:38 Friday September 29, 2023
 --   Exported By:     CHRISTIAN@CH-HECKLER.DE
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -41,9 +41,9 @@ prompt APPLICATION 210266 - TTT
 --       Items:                   44
 --       Validations:              2
 --       Processes:               24
---       Regions:                 69
+--       Regions:                 70
 --       Buttons:                 39
---       Dynamic Actions:         20
+--       Dynamic Actions:         21
 --     Shared Components:
 --       Logic:
 --         App Settings:           2
@@ -123,7 +123,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'TTT'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20230912142020'
+,p_last_upd_yyyymmddhh24miss=>'20230929153506'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_print_server_type=>'INSTANCE'
@@ -18630,7 +18630,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'21'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20230912142020'
+,p_last_upd_yyyymmddhh24miss=>'20230929153506'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(40364463333739799426)
@@ -18843,9 +18843,19 @@ wwv_flow_imp_page.create_ig_report_column(
 ,p_is_visible=>true
 ,p_is_frozen=>false
 );
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(42328972767055898537)
+,p_plug_name=>'Weiteres'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_plug_template=>wwv_flow_imp.id(16191831668618017281)
+,p_plug_display_sequence=>80
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
+);
 wwv_flow_imp_page.create_page_button(
  p_id=>wwv_flow_imp.id(42328969550803898505)
-,p_button_sequence=>40
+,p_button_sequence=>20
+,p_button_plug_id=>wwv_flow_imp.id(42328972767055898537)
 ,p_button_name=>'Abbrechen'
 ,p_button_action=>'DEFINED_BY_DA'
 ,p_button_template_options=>'#DEFAULT#'
@@ -18854,10 +18864,13 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_execute_validations=>'N'
 ,p_warn_on_unsaved_changes=>null
 ,p_grid_new_row=>'Y'
+,p_grid_column_span=>1
+,p_grid_column=>1
 );
 wwv_flow_imp_page.create_page_button(
  p_id=>wwv_flow_imp.id(42328969177878898501)
-,p_button_sequence=>50
+,p_button_sequence=>30
+,p_button_plug_id=>wwv_flow_imp.id(42328972767055898537)
 ,p_button_name=>unistr('Zur\00FCck')
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#'
@@ -18865,7 +18878,8 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_image_alt=>unistr('Zur\00FCck')
 ,p_warn_on_unsaved_changes=>null
 ,p_grid_new_row=>'N'
-,p_grid_new_column=>'N'
+,p_grid_column_span=>1
+,p_grid_column=>2
 );
 wwv_flow_imp_page.create_page_branch(
  p_id=>wwv_flow_imp.id(43495082552676177209)
@@ -18875,11 +18889,23 @@ wwv_flow_imp_page.create_page_branch(
 ,p_branch_type=>'REDIRECT_URL'
 ,p_branch_when_button_id=>wwv_flow_imp.id(42328969177878898501)
 ,p_branch_sequence=>10
+,p_branch_comment=>unistr('VOR dem Speichern wird die Seite verlassen. So kann man den Zur\00FCckknopf implementieren. An dieser Stelle werden auch die Seitenelement korrekt dynamsich bestimmt, die an die Zielseite \00FCbergeben werden.')
+);
+wwv_flow_imp_page.create_page_branch(
+ p_id=>wwv_flow_imp.id(42328972889472898538)
+,p_branch_name=>'BleibeAufSeite3'
+,p_branch_action=>'f?p=&APP_ID.:3:&SESSION.::&DEBUG.:::&success_msg=#SUCCESS_MSG#'
+,p_branch_point=>'BEFORE_COMPUTATION'
+,p_branch_type=>'REDIRECT_URL'
+,p_branch_sequence=>20
+,p_branch_condition_type=>'REQUEST_EQUALS_CONDITION'
+,p_branch_condition=>'TabChanged'
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(34542121636670939902)
 ,p_name=>'P3_TAB_ID'
-,p_item_sequence=>60
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_imp.id(40364463333739799426)
 ,p_prompt=>'Tab Id'
 ,p_display_as=>'NATIVE_TEXT_FIELD'
 ,p_cSize=>30
@@ -18889,11 +18915,13 @@ wwv_flow_imp_page.create_page_item(
 ,p_attribute_02=>'N'
 ,p_attribute_04=>'TEXT'
 ,p_attribute_05=>'BOTH'
+,p_item_comment=>unistr('Damit beim Submit gespeichert wird, muss das Feld zur Region mit dem interaktiven Grid geh\00F6ren.')
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(43495082710329177211)
 ,p_name=>'P3_MANN_ID'
-,p_item_sequence=>70
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_imp.id(42328972767055898537)
 ,p_prompt=>'Mann Id'
 ,p_display_as=>'NATIVE_TEXT_FIELD'
 ,p_cSize=>30
@@ -18906,13 +18934,15 @@ wwv_flow_imp_page.create_page_item(
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(34542121788321939903)
-,p_name=>'TabIdChanged'
+,p_name=>'RefreshGridUndLov'
 ,p_event_sequence=>20
 ,p_triggering_element_type=>'ITEM'
 ,p_triggering_element=>'P3_TAB_ID'
 ,p_bind_type=>'bind'
 ,p_execution_type=>'IMMEDIATE'
 ,p_bind_event_type=>'change'
+,p_display_when_type=>'NEVER'
+,p_da_event_comment=>'Das Refresh der Lov klappt nicht. Daher deaktiviert.'
 );
 wwv_flow_imp_page.create_page_da_action(
  p_id=>wwv_flow_imp.id(34542121893379939904)
@@ -18924,6 +18954,7 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_action=>'NATIVE_REFRESH'
 ,p_affected_elements_type=>'REGION'
 ,p_affected_region_id=>wwv_flow_imp.id(40364463333739799426)
+,p_da_action_comment=>'Das funktioniert. Das interaktive Grid wird neu geladen.'
 );
 wwv_flow_imp_page.create_page_da_action(
  p_id=>wwv_flow_imp.id(42328972384626898533)
@@ -18934,6 +18965,7 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_name=>'Refresh-LOV'
 ,p_action=>'NATIVE_REFRESH'
 ,p_affected_elements_type=>'EVENT_SOURCE'
+,p_da_action_comment=>'Das klappt nicht. Die Lov wird nicht aktualisiert.'
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(42328969836140898508)
@@ -19009,6 +19041,30 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_attribute_02=>'P3_MANN_ID'
 ,p_attribute_05=>'PLSQL'
 ,p_wait_for_result=>'Y'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(42328972407050898534)
+,p_name=>'SubmitPage'
+,p_event_sequence=>40
+,p_triggering_element_type=>'ITEM'
+,p_triggering_element=>'P3_TAB_ID'
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'change'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(42328972508528898535)
+,p_event_id=>wwv_flow_imp.id(42328972407050898534)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_name=>'SubmitPage'
+,p_action=>'NATIVE_SUBMIT_PAGE'
+,p_attribute_01=>'TabChanged'
+,p_attribute_02=>'Y'
+,p_da_action_comment=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'Damit auch die Lov neu berechnet wird, muss man die Seite submitten.',
+unistr('Das ist nicht so richtig sch\00F6n!')))
 );
 wwv_flow_imp_page.create_page_process(
  p_id=>wwv_flow_imp.id(40364470565157799432)

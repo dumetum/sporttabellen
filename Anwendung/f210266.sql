@@ -19,7 +19,7 @@ whenever sqlerror exit sql.sqlcode rollback
 begin
 wwv_flow_imp.import_begin (
  p_version_yyyy_mm_dd=>'2023.10.31'
-,p_release=>'23.2.0-17'
+,p_release=>'23.2.0-20'
 ,p_default_workspace_id=>5687868625594873655
 ,p_default_application_id=>210266
 ,p_default_id_offset=>0
@@ -33,7 +33,7 @@ prompt APPLICATION 210266 - TTT
 -- Application Export:
 --   Application:     210266
 --   Name:            TTT
---   Date and Time:   15:35 Sunday October 22, 2023
+--   Date and Time:   09:47 Sunday November 12, 2023
 --   Exported By:     CHRISTIAN@CH-HECKLER.DE
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -42,7 +42,7 @@ prompt APPLICATION 210266 - TTT
 --       Validations:              2
 --       Processes:               24
 --       Regions:                 69
---       Buttons:                 44
+--       Buttons:                 45
 --       Dynamic Actions:         24
 --     Shared Components:
 --       Logic:
@@ -74,7 +74,7 @@ prompt APPLICATION 210266 - TTT
 --       Reports:
 --       E-Mail:
 --     Supporting Objects:  Included
---   Version:         23.2.0-17
+--   Version:         23.2.0-20
 --   Instance ID:     63113759365424
 --
 
@@ -122,7 +122,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'TTT'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231022152947'
+,p_last_upd_yyyymmddhh24miss=>'20231107133542'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_print_server_type=>'INSTANCE'
@@ -18455,7 +18455,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'21'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231022152109'
+,p_last_upd_yyyymmddhh24miss=>'20231107132939'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(16473241940787392992)
@@ -18543,13 +18543,13 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_expression=>'BEZEICHNUNG'
 ,p_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
-,p_item_type=>'NATIVE_TEXT_FIELD'
+,p_item_type=>'NATIVE_LINK'
 ,p_heading=>'Bezeichnung'
 ,p_heading_alignment=>'LEFT'
 ,p_display_sequence=>40
 ,p_value_alignment=>'LEFT'
-,p_attribute_05=>'BOTH'
-,p_is_required=>false
+,p_link_target=>'f?p=&APP_ID.:9:&SESSION.::&DEBUG.::P9_TAB_ID:&ID.'
+,p_link_text=>'&BEZEICHNUNG.'
 ,p_enable_filter=>true
 ,p_filter_operators=>'C:S:CASE_INSENSITIVE:REGEXP'
 ,p_filter_is_required=>false
@@ -18564,6 +18564,7 @@ wwv_flow_imp_page.create_region_column(
 ,p_is_primary_key=>false
 ,p_duplicate_value=>true
 ,p_include_in_export=>true
+,p_escape_on_http_output=>true
 );
 wwv_flow_imp_page.create_interactive_grid(
  p_id=>wwv_flow_imp.id(16473242432397392993)
@@ -19585,7 +19586,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'21'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231015164925'
+,p_last_upd_yyyymmddhh24miss=>'20231107133542'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(34540913662772443194)
@@ -19868,6 +19869,26 @@ wwv_flow_imp_page.create_ig_report_column(
 ,p_column_id=>wwv_flow_imp.id(34540919973802443201)
 ,p_is_visible=>true
 ,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(76025466243129923622)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_imp.id(34540913662772443194)
+,p_button_name=>'Mannschaften'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_image_alt=>'Mannschaften'
+,p_button_position=>'NEXT'
+);
+wwv_flow_imp_page.create_page_branch(
+ p_id=>wwv_flow_imp.id(76025466388711923623)
+,p_branch_name=>'Mannschaften'
+,p_branch_action=>'f?p=&APP_ID.:3:&SESSION.::&DEBUG.::P3_TAB_ID:&P9_TAB_ID.&success_msg=#SUCCESS_MSG#'
+,p_branch_point=>'BEFORE_COMPUTATION'
+,p_branch_type=>'REDIRECT_URL'
+,p_branch_when_button_id=>wwv_flow_imp.id(76025466243129923622)
+,p_branch_sequence=>10
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(34542121575526939901)

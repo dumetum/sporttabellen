@@ -33,17 +33,17 @@ prompt APPLICATION 210266 - TTT
 -- Application Export:
 --   Application:     210266
 --   Name:            TTT
---   Date and Time:   09:47 Sunday November 12, 2023
+--   Date and Time:   11:18 Sunday November 12, 2023
 --   Exported By:     CHRISTIAN@CH-HECKLER.DE
 --   Flashback:       0
 --   Export Type:     Application Export
---     Pages:                     30
---       Items:                   47
+--     Pages:                     32
+--       Items:                   55
 --       Validations:              2
---       Processes:               24
---       Regions:                 69
---       Buttons:                 45
---       Dynamic Actions:         24
+--       Processes:               27
+--       Regions:                 73
+--       Buttons:                 51
+--       Dynamic Actions:         26
 --     Shared Components:
 --       Logic:
 --         App Settings:           2
@@ -51,7 +51,7 @@ prompt APPLICATION 210266 - TTT
 --       Navigation:
 --         Lists:                  8
 --         Breadcrumbs:            1
---           Entries:              4
+--           Entries:              5
 --       Security:
 --         Authentication:         1
 --         Authorization:          3
@@ -68,7 +68,7 @@ prompt APPLICATION 210266 - TTT
 --           Breadcrumb:           1
 --           Button:               3
 --           Report:              12
---         LOVs:                  11
+--         LOVs:                  13
 --       PWA:
 --       Globalization:
 --       Reports:
@@ -122,7 +122,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'TTT'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231107133542'
+,p_last_upd_yyyymmddhh24miss=>'20231112111641'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_print_server_type=>'INSTANCE'
@@ -193,6 +193,15 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_icon=>'fa-users'
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'5'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(15604183148985587219)
+,p_list_item_display_sequence=>40
+,p_list_item_link_text=>'Spiele-Report'
+,p_list_item_link_target=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-table'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'4,6'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16192204510364018231)
@@ -1279,6 +1288,46 @@ wwv_flow_imp_shared.create_static_lov_data(
 );
 end;
 /
+prompt --application/shared_components/user_interface/lovs/mannschaften
+begin
+wwv_flow_imp_shared.create_list_of_values(
+ p_id=>wwv_flow_imp.id(15608428364825807734)
+,p_lov_name=>'MANNSCHAFTEN'
+,p_lov_query=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select ',
+'m.*, ',
+'  m.verein || '' '' || m.nr as mann_kbez',
+'from TTT_MANNSCHAFTEN m'))
+,p_source_type=>'SQL'
+,p_location=>'LOCAL'
+,p_return_column_name=>'ID'
+,p_display_column_name=>'MANN_KBEZ'
+,p_default_sort_column_name=>'MANN_KBEZ'
+,p_default_sort_direction=>'ASC'
+);
+end;
+/
+prompt --application/shared_components/user_interface/lovs/mannschaftenfuertabelle
+begin
+wwv_flow_imp_shared.create_list_of_values(
+ p_id=>wwv_flow_imp.id(15612285231633742059)
+,p_lov_name=>'MANNSCHAFTENFUERTABELLE'
+,p_lov_query=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'            select ',
+'              m.id,',
+'              m.verein || '' '' || m.nr as mann_kbez',
+'            from TTT_MANNSCHAFTEN m',
+'            left join ttt_tab_mann tm on tm.mann_id = m.id',
+'            where tm.tab_id = :P6_TAB_ID'))
+,p_source_type=>'SQL'
+,p_location=>'LOCAL'
+,p_return_column_name=>'ID'
+,p_display_column_name=>'MANN_KBEZ'
+,p_default_sort_column_name=>'MANN_KBEZ'
+,p_default_sort_direction=>'ASC'
+);
+end;
+/
 prompt --application/shared_components/user_interface/lovs/mannschaftenohnetabelle
 begin
 wwv_flow_imp_shared.create_list_of_values(
@@ -1434,6 +1483,12 @@ begin
 wwv_flow_imp_shared.create_menu(
  p_id=>wwv_flow_imp.id(16191727739243017224)
 ,p_name=>'Breadcrumb'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(15604188033983587224)
+,p_short_name=>'Spiele-Report'
+,p_link=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>4
 );
 wwv_flow_imp_shared.create_menu_option(
  p_id=>wwv_flow_imp.id(16191727986137017224)
@@ -19260,6 +19315,215 @@ wwv_flow_imp_page.create_page_process(
 );
 end;
 /
+prompt --application/pages/page_00004
+begin
+wwv_flow_imp_page.create_page(
+ p_id=>4
+,p_name=>'Spiele-Report'
+,p_alias=>'SPIELE-REPORT'
+,p_step_title=>'Spiele-Report'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'18'
+,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
+,p_last_upd_yyyymmddhh24miss=>'20231112104637'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(15604183520332587220)
+,p_plug_name=>'Spiele-Report'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(16191821856548017276)
+,p_plug_display_sequence=>30
+,p_query_type=>'SQL'
+,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select id, tab_id, mann_id_1, mann_id_2, punkte_mann_1, punkte_mann_2 ,',
+' (select m.verein || '' '' || m.nr as mann_kbez from ttt_mannschaften m where id = s.mann_id_1) mann_1_kbzez,',
+' (select m.verein || '' '' || m.nr as mann_kbez from ttt_mannschaften m where id = s.mann_id_2) mann_2_kbzez',
+'from ttt_spiele s',
+'where tab_id = :P4_TAB_ID'))
+,p_plug_source_type=>'NATIVE_IR'
+,p_prn_page_header=>'Spiele-Report'
+);
+wwv_flow_imp_page.create_worksheet(
+ p_id=>wwv_flow_imp.id(15604183611811587220)
+,p_name=>'Spiele-Report'
+,p_max_row_count_message=>'The maximum row count for this report is #MAX_ROW_COUNT# rows.  Please apply a filter to reduce the number of records in your query.'
+,p_no_data_found_message=>'No data found.'
+,p_pagination_type=>'ROWS_X_TO_Y'
+,p_pagination_display_pos=>'BOTTOM_RIGHT'
+,p_report_list_mode=>'TABS'
+,p_lazy_loading=>false
+,p_show_detail_link=>'C'
+,p_show_notify=>'Y'
+,p_download_formats=>'CSV:HTML:XLSX:PDF'
+,p_enable_mail_download=>'Y'
+,p_detail_link=>'f?p=&APP_ID.:6:&APP_SESSION.::&DEBUG.:RP:P6_ID:\#ID#\'
+,p_detail_link_text=>'<span role="img" aria-label="Edit" class="fa fa-edit" title="Edit"></span>'
+,p_owner=>'CHRISTIAN@CH-HECKLER.DE'
+,p_internal_uid=>15604183611811587220
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(15604184014117587221)
+,p_db_column_name=>'ID'
+,p_display_order=>0
+,p_is_primary_key=>'Y'
+,p_column_identifier=>'A'
+,p_column_label=>'Id'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(15604184443151587221)
+,p_db_column_name=>'TAB_ID'
+,p_display_order=>2
+,p_column_identifier=>'B'
+,p_column_label=>'Tab Id'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(76025466826297923628)
+,p_db_column_name=>'MANN_1_KBZEZ'
+,p_display_order=>12
+,p_column_identifier=>'G'
+,p_column_label=>'Mann 1 Kbzez'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(76025466950411923629)
+,p_db_column_name=>'MANN_2_KBZEZ'
+,p_display_order=>22
+,p_column_identifier=>'H'
+,p_column_label=>'Mann 2 Kbzez'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(15604184842952587222)
+,p_db_column_name=>'MANN_ID_1'
+,p_display_order=>32
+,p_column_identifier=>'C'
+,p_column_label=>'Mann Id 1'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(15604185251568587222)
+,p_db_column_name=>'MANN_ID_2'
+,p_display_order=>42
+,p_column_identifier=>'D'
+,p_column_label=>'Mann Id 2'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(15604185696788587222)
+,p_db_column_name=>'PUNKTE_MANN_1'
+,p_display_order=>52
+,p_column_identifier=>'E'
+,p_column_label=>'Punkte Mann 1'
+,p_column_type=>'NUMBER'
+,p_heading_alignment=>'RIGHT'
+,p_column_alignment=>'RIGHT'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(15604186010773587223)
+,p_db_column_name=>'PUNKTE_MANN_2'
+,p_display_order=>62
+,p_column_identifier=>'F'
+,p_column_label=>'Punkte Mann 2'
+,p_column_type=>'NUMBER'
+,p_heading_alignment=>'RIGHT'
+,p_column_alignment=>'RIGHT'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_rpt(
+ p_id=>wwv_flow_imp.id(15604815074679637938)
+,p_application_user=>'APXWS_DEFAULT'
+,p_report_seq=>10
+,p_report_alias=>'156048151'
+,p_status=>'PUBLIC'
+,p_is_default=>'Y'
+,p_report_columns=>'MANN_1_KBZEZ:MANN_2_KBZEZ:PUNKTE_MANN_1:PUNKTE_MANN_2:'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(15604188155566587224)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(16191844040383017287)
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_imp.id(16191727739243017224)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>wwv_flow_imp.id(16191906625460017318)
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(15604186566412587223)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_imp.id(15604183520332587220)
+,p_button_name=>'CREATE'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Create'
+,p_button_position=>'RIGHT_OF_IR_SEARCH_BAR'
+,p_button_redirect_url=>'f?p=&APP_ID.:6:&SESSION.::&DEBUG.:6:P6_TAB_ID:&P4_TAB_ID.'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(76025466414540923624)
+,p_name=>'P4_TAB_ID'
+,p_item_sequence=>20
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(76025466527229923625)
+,p_name=>'P4_TAB_NAME'
+,p_item_sequence=>10
+,p_prompt=>'Tab Name'
+,p_source=>'select bezeichnung from ttt_tabellen where id = :P4_TAB_ID'
+,p_source_type=>'QUERY'
+,p_display_as=>'NATIVE_TEXT_FIELD'
+,p_cSize=>30
+,p_field_template=>wwv_flow_imp.id(16191902574249017315)
+,p_item_template_options=>'#DEFAULT#'
+,p_attribute_01=>'N'
+,p_attribute_02=>'N'
+,p_attribute_04=>'TEXT'
+,p_attribute_05=>'BOTH'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(15604186848280587223)
+,p_name=>'Edit Report - Dialog Closed'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_imp.id(15604183520332587220)
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(15604187398143587224)
+,p_event_id=>wwv_flow_imp.id(15604186848280587223)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_imp.id(15604183520332587220)
+);
+end;
+/
 prompt --application/pages/page_00005
 begin
 wwv_flow_imp_page.create_page(
@@ -19573,6 +19837,293 @@ wwv_flow_imp_page.create_page_process(
 );
 end;
 /
+prompt --application/pages/page_00006
+begin
+wwv_flow_imp_page.create_page(
+ p_id=>6
+,p_name=>'Spiele-Formular'
+,p_alias=>'SPIELE-FORMULAR'
+,p_page_mode=>'MODAL'
+,p_step_title=>'Spiele-Formular'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'N'
+,p_protection_level=>'C'
+,p_page_component_map=>'02'
+,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
+,p_last_upd_yyyymmddhh24miss=>'20231112111641'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(15604174131383587213)
+,p_plug_name=>'Spiele-Formular'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(16191765033834017251)
+,p_plug_display_sequence=>10
+,p_query_type=>'SQL'
+,p_plug_source=>'select id, tab_id, mann_id_1, mann_id_2, punkte_mann_1, punkte_mann_2 from ttt_spiele'
+,p_is_editable=>true
+,p_edit_operations=>'i:u:d'
+,p_lost_update_check_type=>'VALUES'
+,p_plug_source_type=>'NATIVE_FORM'
+,p_ajax_items_to_submit=>'P6_MANN_ID_1'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(15604178796831587217)
+,p_plug_name=>'Buttons'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(16191767838430017252)
+,p_plug_display_sequence=>20
+,p_plug_display_point=>'REGION_POSITION_03'
+,p_attribute_01=>'N'
+,p_attribute_02=>'TEXT'
+,p_attribute_03=>'Y'
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(15604179114042587217)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_imp.id(15604178796831587217)
+,p_button_name=>'CANCEL'
+,p_button_action=>'DEFINED_BY_DA'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_image_alt=>'Cancel'
+,p_button_position=>'CLOSE'
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(15604180503951587218)
+,p_button_sequence=>20
+,p_button_plug_id=>wwv_flow_imp.id(15604178796831587217)
+,p_button_name=>'DELETE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_image_alt=>'Delete'
+,p_button_position=>'DELETE'
+,p_button_execute_validations=>'N'
+,p_confirm_message=>'&APP_TEXT$DELETE_MSG!RAW.'
+,p_confirm_style=>'danger'
+,p_button_condition=>'P6_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_database_action=>'DELETE'
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(15604180930314587218)
+,p_button_sequence=>30
+,p_button_plug_id=>wwv_flow_imp.id(15604178796831587217)
+,p_button_name=>'SAVE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Apply Changes'
+,p_button_position=>'NEXT'
+,p_button_condition=>'P6_ID'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+,p_database_action=>'UPDATE'
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(15604181303428587218)
+,p_button_sequence=>40
+,p_button_plug_id=>wwv_flow_imp.id(15604178796831587217)
+,p_button_name=>'CREATE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Create'
+,p_button_position=>'NEXT'
+,p_button_condition=>'P6_ID'
+,p_button_condition_type=>'ITEM_IS_NULL'
+,p_database_action=>'INSERT'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15604174556812587214)
+,p_name=>'P6_ID'
+,p_source_data_type=>'NUMBER'
+,p_is_primary_key=>true
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_use_cache_before_default=>'NO'
+,p_prompt=>'Id'
+,p_source=>'ID'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_label_alignment=>'RIGHT'
+,p_field_template=>wwv_flow_imp.id(16191902574249017315)
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_protection_level=>'S'
+,p_attribute_01=>'Y'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15604174992572587214)
+,p_name=>'P6_TAB_ID'
+,p_source_data_type=>'NUMBER'
+,p_item_sequence=>20
+,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_source=>'TAB_ID'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_is_persistent=>'N'
+,p_attribute_01=>'Y'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15604175319958587214)
+,p_name=>'P6_MANN_ID_1'
+,p_source_data_type=>'NUMBER'
+,p_is_required=>true
+,p_item_sequence=>30
+,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_prompt=>'Mannschaft 1'
+,p_source=>'MANN_ID_1'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_SELECT_LIST'
+,p_named_lov=>'MANNSCHAFTENFUERTABELLE'
+,p_lov=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'            select ',
+'              m.id,',
+'              m.verein || '' '' || m.nr as mann_kbez',
+'            from TTT_MANNSCHAFTEN m',
+'            left join ttt_tab_mann tm on tm.mann_id = m.id',
+'            where tm.tab_id = :P6_TAB_ID'))
+,p_cHeight=>1
+,p_field_template=>wwv_flow_imp.id(16191903827514017316)
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_lov_display_extra=>'NO'
+,p_attribute_01=>'NONE'
+,p_attribute_02=>'N'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15604175787133587215)
+,p_name=>'P6_MANN_ID_2'
+,p_source_data_type=>'NUMBER'
+,p_is_required=>true
+,p_item_sequence=>40
+,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_prompt=>'Mannschaft 2'
+,p_source=>'MANN_ID_2'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_SELECT_LIST'
+,p_named_lov=>'MANNSCHAFTENFUERTABELLE'
+,p_lov=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'            select ',
+'              m.id,',
+'              m.verein || '' '' || m.nr as mann_kbez',
+'            from TTT_MANNSCHAFTEN m',
+'            left join ttt_tab_mann tm on tm.mann_id = m.id',
+'            where tm.tab_id = :P6_TAB_ID'))
+,p_cHeight=>1
+,p_field_template=>wwv_flow_imp.id(16191903827514017316)
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_lov_display_extra=>'NO'
+,p_attribute_01=>'NONE'
+,p_attribute_02=>'N'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15604176111493587215)
+,p_name=>'P6_PUNKTE_MANN_1'
+,p_source_data_type=>'NUMBER'
+,p_is_required=>true
+,p_item_sequence=>50
+,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_prompt=>'Punkte Mannschaft 1'
+,p_source=>'PUNKTE_MANN_1'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_NUMBER_FIELD'
+,p_cSize=>32
+,p_cMaxlength=>30
+,p_field_template=>wwv_flow_imp.id(16191903827514017316)
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_attribute_03=>'left'
+,p_attribute_04=>'decimal'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15604176520530587215)
+,p_name=>'P6_PUNKTE_MANN_2'
+,p_source_data_type=>'NUMBER'
+,p_is_required=>true
+,p_item_sequence=>60
+,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
+,p_prompt=>'Punkte Mannschaft 2'
+,p_source=>'PUNKTE_MANN_2'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_NUMBER_FIELD'
+,p_cSize=>32
+,p_cMaxlength=>30
+,p_field_template=>wwv_flow_imp.id(16191903827514017316)
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_attribute_03=>'left'
+,p_attribute_04=>'decimal'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(15604179263315587217)
+,p_name=>'Cancel Dialog'
+,p_event_sequence=>10
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_imp.id(15604179114042587217)
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'click'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(15604180094110587217)
+,p_event_id=>wwv_flow_imp.id(15604179263315587217)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_DIALOG_CANCEL'
+);
+wwv_flow_imp_page.create_page_process(
+ p_id=>wwv_flow_imp.id(15604182176433587219)
+,p_process_sequence=>10
+,p_process_point=>'AFTER_SUBMIT'
+,p_region_id=>wwv_flow_imp.id(15604174131383587213)
+,p_process_type=>'NATIVE_FORM_DML'
+,p_process_name=>'Process form Spiele-Formular'
+,p_attribute_01=>'REGION_SOURCE'
+,p_attribute_05=>'Y'
+,p_attribute_06=>'Y'
+,p_attribute_08=>'Y'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_internal_uid=>15604182176433587219
+);
+wwv_flow_imp_page.create_page_process(
+ p_id=>wwv_flow_imp.id(15604182582575587219)
+,p_process_sequence=>50
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_CLOSE_WINDOW'
+,p_process_name=>'Close Dialog'
+,p_attribute_01=>'P6_MANN_ID_1'
+,p_attribute_02=>'Y'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when=>'CREATE,SAVE,DELETE'
+,p_process_when_type=>'REQUEST_IN_CONDITION'
+,p_internal_uid=>15604182582575587219
+);
+wwv_flow_imp_page.create_page_process(
+ p_id=>wwv_flow_imp.id(15604181758184587218)
+,p_process_sequence=>10
+,p_process_point=>'BEFORE_HEADER'
+,p_region_id=>wwv_flow_imp.id(15604174131383587213)
+,p_process_type=>'NATIVE_FORM_INIT'
+,p_process_name=>'Initialize form Spiele-Formular'
+,p_attribute_01=>'P6_MANN_ID_1'
+,p_attribute_02=>'P6_MANN_ID_1'
+,p_attribute_03=>'P6_MANN_ID_1'
+,p_internal_uid=>15604181758184587218
+);
+end;
+/
 prompt --application/pages/page_00009
 begin
 wwv_flow_imp_page.create_page(
@@ -19586,7 +20137,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'21'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231107133542'
+,p_last_upd_yyyymmddhh24miss=>'20231112100111'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(34540913662772443194)
@@ -19881,6 +20432,18 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_image_alt=>'Mannschaften'
 ,p_button_position=>'NEXT'
 );
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(76025466642903923626)
+,p_button_sequence=>20
+,p_button_plug_id=>wwv_flow_imp.id(34540913662772443194)
+,p_button_name=>'Spiele'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>wwv_flow_imp.id(16191905084090017317)
+,p_button_image_alt=>'Spiele'
+,p_button_position=>'NEXT'
+,p_button_execute_validations=>'N'
+);
 wwv_flow_imp_page.create_page_branch(
  p_id=>wwv_flow_imp.id(76025466388711923623)
 ,p_branch_name=>'Mannschaften'
@@ -19889,6 +20452,14 @@ wwv_flow_imp_page.create_page_branch(
 ,p_branch_type=>'REDIRECT_URL'
 ,p_branch_when_button_id=>wwv_flow_imp.id(76025466243129923622)
 ,p_branch_sequence=>10
+);
+wwv_flow_imp_page.create_page_branch(
+ p_id=>wwv_flow_imp.id(76025466727067923627)
+,p_branch_name=>'Spiele'
+,p_branch_action=>'f?p=&APP_ID.:4:&SESSION.::&DEBUG.::P4_TAB_ID:&P9_TAB_ID.&success_msg=#SUCCESS_MSG#'
+,p_branch_point=>'BEFORE_COMPUTATION'
+,p_branch_type=>'REDIRECT_URL'
+,p_branch_sequence=>20
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(34542121575526939901)

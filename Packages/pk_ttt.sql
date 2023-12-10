@@ -28,5 +28,9 @@ return varchar2;
 */
 procedure pr_process_ttt_tab_mann(i_id_str IN OUT varchar2, i_tab_id_str IN OUT varchar2, i_mann_id_str IN varchar2, i_p3_tab_id_str IN varchar2);
 
+procedure pr_set_mann_id(i_mann_id IN NUMBER);
+
+procedure pr_process_ergebnis;
+
 end "PK_TTT";
 /

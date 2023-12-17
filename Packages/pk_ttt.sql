@@ -1,25 +1,5 @@
 create or replace package "PK_TTT" as
 
---==============================================================================
--- comments about procedure
---==============================================================================
-procedure process_emp_data (
-    p_empno      in out number,
-    p_ename      in     varchar2,
-    p_job        in     varchar2,
-    p_mgr        in     number,
-    p_hiredate   in     date,
-    p_sal        in     number,
-    p_comm       in     number,
-    p_deptno     in     number,
-    p_row_status in     varchar2 );
-
---==============================================================================
--- comments about function
---==============================================================================
-function get_ename (
-    p_empno in number )
-return varchar2;
 
 /**
 * Die drei ersten Parameter sind die Spalten aus dem interaktiven Grid.
@@ -31,6 +11,15 @@ procedure pr_process_ttt_tab_mann(i_id_str IN OUT varchar2, i_tab_id_str IN OUT 
 procedure pr_set_mann_id(i_mann_id IN NUMBER);
 
 procedure pr_process_ergebnis;
+
+function get_mannschaftsbezeichnung(i_mann_id NUMBER)
+return varchar2;
+
+/**
+* Für ein Spiel aus der Tabelle ttt_spiele mit der id i_spiel_id wird die Bezeichnung der ersten bzw. zweiten beteiligten Mannschaft zurückgegeben
+*/
+function get_mannschaftsbezeichnung(i_spiel_id NUMBER, i_mann_nr NUMBER)
+return varchar2;
 
 end "PK_TTT";
 /

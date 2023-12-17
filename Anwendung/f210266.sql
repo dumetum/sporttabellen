@@ -33,12 +33,12 @@ prompt APPLICATION 210266 - TTT
 -- Application Export:
 --   Application:     210266
 --   Name:            TTT
---   Date and Time:   11:39 Sunday December 10, 2023
+--   Date and Time:   11:34 Sunday December 17, 2023
 --   Exported By:     CHRISTIAN@CH-HECKLER.DE
 --   Flashback:       0
 --   Export Type:     Application Export
 --     Pages:                     32
---       Items:                   55
+--       Items:                   57
 --       Validations:              2
 --       Processes:               27
 --       Regions:                 73
@@ -122,7 +122,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'TTT'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231210113620'
+,p_last_upd_yyyymmddhh24miss=>'20231217112328'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_print_server_type=>'INSTANCE'
@@ -1321,8 +1321,10 @@ wwv_flow_imp_shared.create_list_of_values(
 '            where tm.tab_id = :P6_TAB_ID'))
 ,p_source_type=>'SQL'
 ,p_location=>'LOCAL'
+,p_use_local_sync_table=>false
 ,p_return_column_name=>'ID'
 ,p_display_column_name=>'MANN_KBEZ'
+,p_group_sort_direction=>'ASC'
 ,p_default_sort_column_name=>'MANN_KBEZ'
 ,p_default_sort_direction=>'ASC'
 );
@@ -19899,7 +19901,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'16'
 ,p_last_updated_by=>'CHRISTIAN@CH-HECKLER.DE'
-,p_last_upd_yyyymmddhh24miss=>'20231210094657'
+,p_last_upd_yyyymmddhh24miss=>'20231217112328'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(15604174131383587213)
@@ -20038,9 +20040,10 @@ wwv_flow_imp_page.create_page_item(
 '            left join ttt_tab_mann tm on tm.mann_id = m.id',
 '            where tm.tab_id = :P6_TAB_ID'))
 ,p_cHeight=>1
+,p_display_when=>'P6_MANN_ID_1'
+,p_display_when_type=>'ITEM_IS_NULL'
 ,p_field_template=>wwv_flow_imp.id(16191903827514017316)
 ,p_item_template_options=>'#DEFAULT#'
-,p_is_persistent=>'N'
 ,p_lov_display_extra=>'NO'
 ,p_attribute_01=>'NONE'
 ,p_attribute_02=>'N'
@@ -20066,9 +20069,10 @@ wwv_flow_imp_page.create_page_item(
 '            left join ttt_tab_mann tm on tm.mann_id = m.id',
 '            where tm.tab_id = :P6_TAB_ID'))
 ,p_cHeight=>1
+,p_display_when=>'P6_MANN_ID_2'
+,p_display_when_type=>'ITEM_IS_NULL'
 ,p_field_template=>wwv_flow_imp.id(16191903827514017316)
 ,p_item_template_options=>'#DEFAULT#'
-,p_is_persistent=>'N'
 ,p_lov_display_extra=>'NO'
 ,p_attribute_01=>'NONE'
 ,p_attribute_02=>'N'
@@ -20081,7 +20085,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_sequence=>50
 ,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
 ,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
-,p_prompt=>'Punkte Mannschaft 1'
+,p_prompt=>'Punkte &P6_MANN_1_BEZ.'
 ,p_source=>'PUNKTE_MANN_1'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
 ,p_display_as=>'NATIVE_NUMBER_FIELD'
@@ -20101,7 +20105,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_sequence=>60
 ,p_item_plug_id=>wwv_flow_imp.id(15604174131383587213)
 ,p_item_source_plug_id=>wwv_flow_imp.id(15604174131383587213)
-,p_prompt=>'Punkte Mannschaft 2'
+,p_prompt=>'Punkte &P6_MANN_2_BEZ.'
 ,p_source=>'PUNKTE_MANN_2'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
 ,p_display_as=>'NATIVE_NUMBER_FIELD'
@@ -20112,6 +20116,28 @@ wwv_flow_imp_page.create_page_item(
 ,p_is_persistent=>'N'
 ,p_attribute_03=>'left'
 ,p_attribute_04=>'decimal'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(76025467291654923632)
+,p_name=>'P6_MANN_1_BEZ'
+,p_item_sequence=>20
+,p_use_cache_before_default=>'NO'
+,p_source=>'pk_ttt.get_mannschaftsbezeichnung(:P6_ID, 1)'
+,p_source_type=>'EXPRESSION'
+,p_source_language=>'PLSQL'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(76025467419604923634)
+,p_name=>'P6_MANN_2_BEZ'
+,p_item_sequence=>30
+,p_use_cache_before_default=>'NO'
+,p_source=>'pk_ttt.get_mannschaftsbezeichnung(:P6_ID, 2)'
+,p_source_type=>'EXPRESSION'
+,p_source_language=>'PLSQL'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attribute_01=>'Y'
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(15604179263315587217)

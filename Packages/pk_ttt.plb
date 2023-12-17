@@ -1,65 +1,13 @@
 create or replace package body "PK_TTT" as
 
---==============================================================================
--- Public API, see specification
---==============================================================================
-procedure process_emp_data (
-    p_empno      in out number,
-    p_ename      in     varchar2,
-    p_job        in     varchar2,
-    p_mgr        in     number,
-    p_hiredate   in     date,
-    p_sal        in     number,
-    p_comm       in     number,
-    p_deptno     in     number,
-    p_row_status in     varchar2 )
-is
-begin
-    apex_debug.enter(
-        'process_emp_data' ,
-        'p_empno'          , p_empno,
-        'p_empno'          , p_empno,
-        'p_job'            , p_job,
-        'p_mgr'            , p_mgr,
-        'p_hiredate'       , p_hiredate,
-        'p_sal'            , p_sal,
-        'p_comm'           , p_comm,
-        'p_deptno'         , p_deptno,
-        'p_row_status'     , p_row_status );
-
-    -- enter the procedure code here
-
-end process_emp_data;
-
---==============================================================================
--- Public API, see specification
---==============================================================================
-function get_ename (
-    p_empno in number )
+function get_mannschaftsbezeichnung(i_mann_id NUMBER)
 return varchar2
-is
-    l_ename varchar2(255);
+is 
+  l_bez varchar2(45);
 begin
-    apex_debug.enter(
-        'get_ename' ,
-        'p_empno'   , p_empno );
-
-    -- enter the function code here
-    /*
-    select ename
-      into l_ename
-      from emp
-     where empno = p_empno;
-    */
-    return l_ename;
-exception
-    when no_data_found then
-        apex_debug.warn(
-            p_message => 'Employee not found. p_empno %s, sqlerrm %s',
-            p0        => p_empno,
-            p1        => sqlerrm );
-        raise;
-end get_ename;
+  select verein || ' ' || nr into l_bez from ttt_mannschaften where id = i_mann_id;
+  return l_bez;
+end;
 
 --
 -- Verarbeite alle Ergebnisse einer Tabelle, d.h. berechne alle Punkte neu.
@@ -147,15 +95,18 @@ is
   l_id constant number := apex_session_state.get_number('P6_ID');
   l_new_id number;
   l_tab_id constant number := apex_session_state.get_number('P6_TAB_ID');
-  l_mann_id_1 constant number := apex_session_state.get_number('P6_MANN_ID_1');
-  l_mann_id_2 constant number := apex_session_state.get_number('P6_MANN_ID_2');
+  l_mann_id_1 number;
+  l_mann_id_2 number;
   l_punkte_mann_1 constant number := apex_session_state.get_number('P6_PUNKTE_MANN_1');
   l_punkte_mann_2 constant number := apex_session_state.get_number('P6_PUNKTE_MANN_2');
 begin
-  -- pk_chh.pr_write_log('pr_process_ergebnis: , request: ' || l_request || ', id: ' || l_id ||  ', tab_id: ' || l_tab_id || ', mann_id_1: ' || l_mann_id_1  || ', mann_id_2: ' || l_mann_id_2 || ', punkte_mann_1: ' || l_punkte_mann_1  || ', punkte_mann_2: ' || l_punkte_mann_2);
-  APEX_DEBUG_MESSAGE.LOG_MESSAGE(p_message => 'pr_process_ergebnis: , request: ' || l_request || ', id: ' || l_id ||  ', tab_id: ' || l_tab_id || ', mann_id_1: ' || l_mann_id_1  || ', mann_id_2: ' || l_mann_id_2 || ', punkte_mann_1: ' || l_punkte_mann_1  || ', punkte_mann_2: ' || l_punkte_mann_2, p_level => 4);
+  pk_chh.pr_write_log('pr_process_ergebnis: , request: ' || l_request || ', id: ' || l_id ||  ', tab_id: ' || l_tab_id || ', mann_id_1: ' || l_mann_id_1  || ', mann_id_2: ' || l_mann_id_2 || ', punkte_mann_1: ' || l_punkte_mann_1  || ', punkte_mann_2: ' || l_punkte_mann_2);
+  ---APEX_DEBUG_MESSAGE.LOG_MESSAGE(p_message => 'pr_process_ergebnis: , request: ' || l_request || ', id: ' || l_id ||  ', tab_id: ' || l_tab_id || ', mann_id_1: ' || l_mann_id_1  || ', mann_id_2: ' || l_mann_id_2 || ', punkte_mann_1: ' || l_punkte_mann_1  || ', punkte_mann_2: ' || l_punkte_mann_2, p_level => 4);
 
   if l_request = 'CREATE'  then
+    l_mann_id_1 := apex_session_state.get_number('P6_MANN_ID_1');
+    l_mann_id_2 := apex_session_state.get_number('P6_MANN_ID_2');
+
     insert into ttt_spiele (tab_id, mann_id_1, mann_id_2, punkte_mann_1, punkte_mann_2)
     values(l_tab_id, l_mann_id_1, l_mann_id_2, l_punkte_mann_1, l_punkte_mann_2)
     returning id into l_new_id;   
@@ -164,11 +115,30 @@ begin
   elsif l_request = 'DELETE' then
     delete from ttt_spiele where id = l_id;
   else
+    -- bei einem Update werden nur die Punkte neu gesetzt
     update ttt_spiele
-    set mann_id_1 = l_mann_id_1, mann_id_2 = l_mann_id_2, punkte_mann_1 = l_punkte_mann_1, punkte_mann_2 = l_punkte_mann_2
+    set punkte_mann_1 = l_punkte_mann_1, punkte_mann_2 = l_punkte_mann_2
     where id = l_id;
   end if;
 
+end;
+
+function get_mannschaftsbezeichnung(i_spiel_id NUMBER, i_mann_nr NUMBER)
+return varchar2
+is
+  -- chh: nehme die richtige laenge
+  l_bez varchar2(45);
+begin
+  if i_spiel_id is null then
+    return 'Mannschaft ' || to_char(i_mann_nr);
+  else
+    if i_mann_nr = 1 then
+      select get_mannschaftsbezeichnung(mann_id_1) into l_bez from ttt_spiele where id = i_spiel_id;
+    else
+      select get_mannschaftsbezeichnung(mann_id_2) into l_bez from ttt_spiele where id = i_spiel_id;
+    end if;
+    return l_bez;
+  end if;
 end;
 
 end "PK_TTT";
